@@ -31,9 +31,12 @@
     gap: 30px;
     margin-bottom: 20px;
   }
-  
+  .mt{
+    margin-top: 2px;
+  }
   @media (max-width: 600px) {
     .grid {
       grid-template-columns: 1fr;
     }
   }
+ 
