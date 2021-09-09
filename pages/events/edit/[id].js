@@ -9,6 +9,8 @@ import 'react-toastify/dist/ReactToastify.css';
 import { API_URL } from "@/config/index";
 import moment from 'moment';
 import { FaImage } from "react-icons/fa";
+import Modal from "@/components/Modal";
+import ImageUpload from "@/components/ImageUpload";
 
 const EditEventPage = ({event}) => {
   const [values, setValues] = useState({
@@ -21,7 +23,9 @@ const EditEventPage = ({event}) => {
     description: event.description,
   });
 
-    const [imagePreview, setImagePreview] = useState( event.image ? event.image.formats.thumbnail.url : null)
+    const [imagePreview, setImagePreview] = useState( event.image ? event.image.formats.thumbnail.url : null);
+
+    const [showModal, setShowModal] = useState(false);
 
     const router = useRouter();
 
@@ -49,10 +53,20 @@ const EditEventPage = ({event}) => {
     console.log(values)
     
   };
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setValues({ ...values, [name]: value });
   };
+
+  const imageUploaded = (e) => {
+    fetch(`${API_URL}/events/${event.id}`)
+    .then( res => res.json() )
+    .then( data => {
+      setImagePreview(data.image.formats.thumbnail.url);
+      setShowModal(false)
+    })
+  }
   return (
     <Layout title="Add Event">
       <Link href="/events">
@@ -147,10 +161,13 @@ const EditEventPage = ({event}) => {
       }
 
       <div>
-          <button className={`btn-secondary ${styles.mt} p-2`}>
+          <button className={`btn-secondary ${styles.mt} p-2`} onClick={() => setShowModal(true)}>
               <FaImage className='mx-1' /> Set Image 
           </button>
       </div>
+      <Modal show={showModal} onClose={() => setShowModal(false)}>
+          <ImageUpload eventId={event.id} imageUploaded={imageUploaded}/>
+      </Modal>
     </Layout>
   );
 };
