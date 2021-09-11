@@ -2,7 +2,7 @@ import styles from '@/styles/Form.module.css';
 import { useState } from 'react';
 import { API_URL } from '../config';
 
-const ImageUpload = ({eventId, imageUploaded}) => {
+const ImageUpload = ({eventId, imageUploaded, token}) => {
     const [image, setImage] = useState(null);
 
     const handleSubmit = (e) => {
@@ -17,6 +17,9 @@ const ImageUpload = ({eventId, imageUploaded}) => {
 
         fetch(`${API_URL}/upload`,{
             method: 'POST',
+            headers:{
+                Authorization: `Bearer ${token}`
+            },
             body: formData
         })
         .then( res => res.json() )
